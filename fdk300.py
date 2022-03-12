@@ -6,7 +6,7 @@ import pexpect
 class FDK300:
     def __init__(self, device):
         self.device = device
-        self.timeout = 2
+        self.timeout = 3
 
     def bytecode_convert(self, hex_code) -> list:
         strip_binary = (hex_code).decode('ascii').strip()
@@ -27,17 +27,21 @@ class FDK300:
         temperature = 0
         connect_status = self.connect()
         if not connect_status:
-            sys.exit()
-        self.child.sendline("char-read-hnd 0x0024")
-        self.child.expect("Characteristic value/descriptor:",
-                          timeout=self.timeout)
-        self.child.expect("\r\n", timeout=self.timeout)
-        code = self.bytecode_convert(self.child.before)
-        if len(code) == 8:
-            mix_highlow_byte = code[4]+code[5]
-            temperature = int(mix_highlow_byte, 16)/100
-            if temperature < 50:
-                return temperature
+            #sys.exit()
+            pass
+        
+        if connect_status:
+            self.child.sendline("char-read-hnd 0x0024")
+            self.child.expect("Characteristic value/descriptor:",
+                              timeout=self.timeout)
+            self.child.expect("\r\n", timeout=self.timeout)
+            code = self.bytecode_convert(self.child.before)
+            if len(code) == 8:
+                mix_highlow_byte = code[4]+code[5]
+                temperature = int(mix_highlow_byte, 16)/100
+                if temperature < 50:
+                    return {'temperature':temperature}
+        return {'temperature':0}
         #print('wait scan...')
 
 

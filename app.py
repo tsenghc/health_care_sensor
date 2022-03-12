@@ -3,13 +3,12 @@ import sqlite3
 
 import requests
 from flask import Flask, jsonify, render_template, request
-from fdk import FDK300
-from fdk400bt import FDK400
-from oximeter import M170
+from fdk300 import FDK300
+from fdk400 import FDK400
+from m170 import M170
 app = Flask(__name__)
 con = sqlite3.connect('check_log.db', check_same_thread=False)
 fdk300 = FDK300("C6:05:04:07:4D:54")
-
 
 
 @app.route('/add_present_user', methods=['POST'])
@@ -51,21 +50,22 @@ def temperature():
         print(out)
         return jsonify(out), 200
 
+
 @ app.route('/finger')
 def finger():
-    m170=M170()
-    out=m170.get_sensor_data()
+    m170 = M170()
+    out = m170.get_sensor_data()
     print(out)
     return jsonify(out), 200
+
 
 @ app.route('/pressure')
 def pressure():
     fdk400 = FDK400()
     pressure = fdk400.get_sensor_data()
     print(pressure)
-    
-    return jsonify(pressure), 200
 
+    return jsonify(pressure), 200
 
 
 @ app.route('/')

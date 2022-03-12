@@ -1,8 +1,12 @@
 from flask import Flask
 from flask import render_template, redirect, url_for
-
+from fdk300 import FDK300
+from fdk400 import FDK400
+from m170 import M170
+from mtk_a1 import MTKA1
 app = Flask(__name__)
-
+fdk300 = FDK300("C6:05:04:07:4D:54")
+scale = MTKA1()
 
 @app.route('/para/<user>')
 def index(user):

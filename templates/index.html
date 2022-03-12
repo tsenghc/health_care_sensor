@@ -27,43 +27,19 @@
             var lastResult, countResults = 0;
             var temperature = 0;
             function onScanSuccess(decodedText, decodedResult) {
-
-                console.log(`Scan result ${decodedText}`, decodedResult);
-                const obj = JSON.parse(decodedText);
+                // console.log(`Scan result ${decodedText}`, decodedResult);
                 axios({
-                    url: 'http://127.0.0.1:5000/temperature', method: 'get'
+                    method: 'post',
+                    url: 'http://api-dev.huakai.com.tw/api/2.3/health-care/auth',
+                    data: { token: decodedResult.decodedText }
                 }).then(function (response) {
-                    $("#temperature").text(response.data.temperature);
-                    temperature = response.data.temperature;
-                    console.log(temperature);
-                });
-		axios({
-                    url: 'http://127.0.0.1:5000/pressure', method: 'get'
-                }).then(function (response) {
-                    $("#pressure_D").text(response.data.pressure_D);
-                    $("#pressure_S").text(response.data.pressure_S);
-                    pressure = response.data.pressure_D;
-                    console.log(pressure);
+                    $("#username").text(response.data.data.username);
+                    $("#telephone").text(response.data.data.telephone);
+                    $("#birthday").text(response.data.data.birthday);
+                    $("#sex").text(response.data.data.sex);
+                    $("#email").text(response.data.data.email);
                 });
 
-		axios({
-		    url: 'http://127.0.0.1:5000/finger', method: 'get'
-		        }).then(function (response) {
-			$("#pulse").text(response.data.pulse);
-			$("#oxygen").text(response.data.oxygen);
-			finger = response.data.oxygen;
-			console.log(finger);
-		});
-
-                if (temperature != 0) {
-                    axios({
-                        method: 'post',
-                        url: 'http://127.0.0.1:5000/add_present_user',
-                        data: { 'user_id': obj.id, 'user_name': obj.name, 'temperature': temperature }
-                    }).then(function (response) {
-                        console.log(response.data);
-                    });
-                }
 
             }
 
@@ -71,16 +47,16 @@
                 "qr-reader", { fps: 2, qrbox: 500 });
             html5QrcodeScanner.render(onScanSuccess);
         });
-        setInterval(() => {
-            axios({
-                url: 'http://127.0.0.1:5000/present_user', method: 'get'
-            }).then(function (response) {
-                console.log(response.data);
-                $("#present_user").text(+response.data.user_id + "|" + response.data.user_name);
-                $("#temperature").text(response.data.temperature);
-            })
+        // setInterval(() => {
+        //     axios({
+        //         url: 'http://127.0.0.1:5000/present_user', method: 'get'
+        //     }).then(function (response) {
+        //         console.log(response.data);
+        //         $("#present_user").text(+response.data.user_id + "|" + response.data.user_name);
+        //         $("#temperature").text(response.data.temperature);
+        //     })
 
-        }, 1000);
+        // }, 1000);
     </script>
 
 </head>
@@ -90,11 +66,11 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">人員體溫檢測</a>
             <div class="collapse navbar-collapse" id="navbarScroll">
-                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+                <!-- <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="history">History</a>
                     </li>
-                </ul>
+                </ul> -->
             </div>
         </div>
     </nav>
@@ -104,9 +80,33 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col">
-                            <h1>人員資訊：</h1>
+                            <h3>姓名：</h3>
                         </div>
-                        <div class="h1 col" id="present_user"></div>
+                        <div class="h3 col" id="username"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3>手機：</h3>
+                        </div>
+                        <div class="h3 col" id="telephone"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3>生日：</h3>
+                        </div>
+                        <div class="h3 col" id="birthday"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3>性別：</h3>
+                        </div>
+                        <div class="h3 col" id="sex"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h3>電子信箱：</h3>
+                        </div>
+                        <div class="h3 col" id="email"></div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -117,6 +117,16 @@
                         <div class="col">
                             <h5 class="card-title">
                                 <div class="h1" id="temperature"></div>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1>體重：</h1>
+                        </div>
+                        <div class="col">
+                            <h5 class="card-title">
+                                <div class="h1" id="kg"></div>
                             </h5>
                         </div>
                     </div>
@@ -140,7 +150,7 @@
                             </h5>
                         </div>
                     </div>
-                   <div class="row">
+                    <div class="row">
                         <div class="col">
                             <h1>收縮壓：</h1>
                         </div>
