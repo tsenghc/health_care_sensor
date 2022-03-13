@@ -21,12 +21,12 @@
                 document.addEventListener("DOMContentLoaded", fn);
             }
         }
-
+        var uuid = "";
         docReady(function () {
-            var resultContainer = document.getElementById('qr-reader-results');
-            var lastResult, countResults = 0;
-            var temperature = 0;
-            var uuid = "";
+            let resultContainer = document.getElementById('qr-reader-results');
+            let lastResult, countResults = 0;
+            let temperature = 0;
+
             function onScanSuccess(decodedText, decodedResult) {
                 // console.log(`Scan result ${decodedText}`, decodedResult);
                 axios({
@@ -39,17 +39,15 @@
                     $("#birthday").text(response.data.data.birthday);
                     $("#sex").text(response.data.data.sex);
                     $("#email").text(response.data.data.email);
-                    uuid = response.data.data.email;
+                    uuid = response.data.data.uuid;
                 });
-
-
             }
-
             var html5QrcodeScanner = new Html5QrcodeScanner(
                 "qr-reader", { fps: 2, qrbox: 500 });
             html5QrcodeScanner.render(onScanSuccess);
         });
         setInterval(() => {
+            let base_url = "http://api-dev.huakai.com.tw/api/2.3/users/";
             if ($("#temperature").text() === '') {
                 axios({
                     url: 'http://127.0.0.1:5000/fdk300', method: 'get'
@@ -67,6 +65,13 @@
                     console.log(response.data);
                     if (response.data.weight !== 0) {
                         $("#kg").text(response.data.weight + 'kg');
+                        axios({
+                            url: base_url + uuid + '/health-care/weight',
+                            method: 'post',
+                            data: { values: response.data.weight }
+                        }).then(function (response) {
+                            console.log(response.data);
+                        })
                     }
                 })
             }
@@ -89,6 +94,13 @@
                     if (response.data.pressure_S !== 0) {
                         $("#pressure_S").text(response.data.pressure_S);
                         $("#pressure_D").text(response.data.pressure_D);
+                        axios({
+                            url: base_url + uuid + '/health-care/blood-pressure',
+                            method: 'post',
+                            data: { values: response.data.pressure_S }
+                        }).then(function (response) {
+                            console.log(response.data);
+                        })
                     }
                 })
             }
