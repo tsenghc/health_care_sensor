@@ -27,7 +27,7 @@ class M170:
             res = proc.stdout.readline()
             data = res.decode('ascii').strip()
             if data.find('fe 6a 76 52 04 81') != -1:
-                data = data.split(" ")[25:35]
+                data = data.split(" ")[3:12]
                 if len(data[6]) > 0:
                     pulse_list.append(int(data[6], 16))
                     oxygen_list.append(int(data[7], 16))
