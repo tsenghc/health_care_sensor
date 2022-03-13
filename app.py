@@ -1,6 +1,3 @@
-import datetime
-import sqlite3
-
 from flask import Flask, jsonify, render_template
 
 from fdk300 import FDK300
