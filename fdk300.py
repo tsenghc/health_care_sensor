@@ -11,9 +11,7 @@ class FDK300:
           printf 'read\n\n'
           printf '\n\n'
           sleep 3
-         
         } | bluetoothctl
-        
         '''
 
     def get_sensor_data(self):
@@ -30,7 +28,6 @@ class FDK300:
                 if temperateure < 50:
                     result['temperature'] = str(temperateure)
                     return result
-
         return result
 
 

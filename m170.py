@@ -12,9 +12,7 @@ class M170:
           printf '\n\n'
           sleep 7
           printf 'disconnect\n\n'
-         
         } | bluetoothctl
-        
         '''
 
     def get_sensor_data(self):

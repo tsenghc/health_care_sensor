@@ -11,8 +11,7 @@ class FDK400:
           printf 'read\n\n'
           printf '\n\n'
           sleep 1 
-        } | bluetoothctl
-        
+        } | bluetoothctl 
         '''
 
     def get_sensor_data(self):
