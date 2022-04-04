@@ -2,20 +2,20 @@ from fdk300 import FDK300
 from fdk400 import FDK400
 from m170 import M170
 from mtk_a1 import MTKA1
-from collections import defaultdict
+
 
 class HealthCare:
     def __init__(self,):
         self.sensor_data = {
-            'weight':0,
-            'pressure_S':0,
-            'pressure_D':0,
-            'pulse':0,
-            'oxygen':0,
-            'temperature':0
-            }
+            'weight': 0,
+            'pressure_S': 0,
+            'pressure_D': 0,
+            'pulse': 0,
+            'oxygen': 0,
+            'temperature': 0
+        }
         self.status = True
-            
+
     def listen_sensor(self,):
         if self.sensor_data['temperature'] == 0:
             fdk300 = FDK300()
@@ -40,9 +40,9 @@ class HealthCare:
         return self.sensor_data
 
 
-if __name__=='__main__':
-    health_care=HealthCare()
-    
+if __name__ == '__main__':
+    health_care = HealthCare()
+
     while health_care.status:
         health_care.listen_sensor()
         sensor_data = (health_care.sensor_data)
