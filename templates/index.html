@@ -28,7 +28,7 @@
             let temperature = 0;
 
             function onScanSuccess(decodedText, decodedResult) {
-                // console.log(`Scan result ${decodedText}`, decodedResult);
+                console.log(`Scan result ${decodedText}`, decodedResult);
                 axios({
                     method: 'post',
                     url: 'http://api-dev.huakai.com.tw/api/2.3/health-care/auth',
@@ -104,7 +104,7 @@
                     }
                 })
             }
-        }, 3000);
+        }, 5000);
     </script>
 
 </head>

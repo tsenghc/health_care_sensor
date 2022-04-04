@@ -1,39 +1,57 @@
-import random
-
-from flask import Flask, jsonify, render_template
-
-
+import datetime
+import sqlite3
+import json
+import requests
+from flask import Flask, jsonify, render_template, request
+from fdk300 import FDK300
+from fdk400 import FDK400
+from m170 import M170
+from mtk_a1 import MTKA1
+from sensor_test import HealthCare
 app = Flask(__name__)
+
+# sensor_data = {
+#             'weight':0,
+#             'pressure_S':0,
+#             'pressure_D':0,
+#             'pulse':0,
+#             'oxygen':0,
+#             'temperature':0
+#             }
 
 
 @ app.route('/fdk300')
 def fdk300():
-    sensor_data = {'temperature': random.randint(10,100)}
-    return jsonify(sensor_data), 200
-
+    fdk300 = FDK300()
+    _temp = fdk300.get_sensor_data()
+    sensor_data = {'temperature':_temp['temperature']}
+    return jsonify(sensor_data),200
 
 @ app.route('/fdk400')
 def fdk400():
-    sensor_data = {'pressure_S': 0, 'pressure_D': 0}
-    sensor_data['pressure_S'] = random.randint(10,100)
-    sensor_data['pressure_D'] = random.randint(10,100)
-    return jsonify(sensor_data), 200
-
+    fdk400 = FDK400()
+    _temp = fdk400.get_sensor_data()
+    sensor_data = {'pressure_S':0,'pressure_D':0}
+    sensor_data['pressure_S'] = _temp['pressure_S']
+    sensor_data['pressure_D'] = _temp['pressure_D']
+    return jsonify(sensor_data),200
 
 @ app.route('/mtka1')
 def mtka1():
-    sensor_data = {'weight': 0}
-    sensor_data['weight'] = random.randint(10,100)
-    return jsonify(sensor_data), 200
-
+    scale = MTKA1()
+    sensor_data = {'weight':0}
+    _temp = scale.get_sensor_data()
+    sensor_data['weight'] = _temp['weight']
+    return jsonify(sensor_data),200
 
 @ app.route('/m170')
 def m170():
-    sensor_data = {'oxygen': 0, 'pulse': 0}
-    sensor_data['oxygen'] = random.randint(10,100)
-    sensor_data['pulse'] = random.randint(10,100)
-    return jsonify(sensor_data), 200
-
+    m170 = M170()
+    sensor_data = {'oxygen':0,'pulse':0}
+    _temp = m170.get_sensor_data()
+    sensor_data['oxygen'] = _temp['oxygen']
+    sensor_data['pulse'] = _temp['pulse']
+    return jsonify(sensor_data),200
 
 @ app.route('/')
 def index():
@@ -43,4 +61,4 @@ def index():
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.jinja_env.auto_reload = True
-    app.run(host='127.0.0.1', debug=True, port=5000)
+    app.run(debug=True, threaded=True)
