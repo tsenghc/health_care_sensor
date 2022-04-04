@@ -15,9 +15,10 @@ class FDK300:
         } | bluetoothctl
         
         '''
+
     def get_sensor_data(self):
         proc = subprocess.Popen(self.cmd, shell=True, stdout=subprocess.PIPE)
-        result={'temperature' : 0}
+        result = {'temperature': 0}
         temperateure = 0
         for i in range(50):
             res = proc.stdout.readline()
@@ -25,7 +26,7 @@ class FDK300:
             if data.find('fe 6a 72 5a') != -1:
                 data = data.split(' ')[3:10]
                 _temp = str("").join(data[4:6])
-                temperateure = int(_temp,16)/100
+                temperateure = int(_temp, 16)/100
                 if temperateure < 50:
                     result['temperature'] = str(temperateure)
                     return result
@@ -38,5 +39,3 @@ if __name__ == '__main__':
     while 1:
         data = fdk300.get_sensor_data()
         print(data)
-
-
